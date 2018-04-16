@@ -11,8 +11,8 @@
 		}
 	],
 	"require": {
-		"silverstripe/framework": "~4.0",
-		"silverstripe/cms": "~4.0"
+		"silverstripe/framework": "^4.1",
+		"silverstripe/cms": "^4.1"
 	},
 	"suggest": {
 		"ajshort/silverstripe-gridfieldextensions": "Allows drag-and-drop reordering of fields"
@@ -20,6 +20,7 @@
 	"extra": {
         "expose": [
             "client"
+
         ],
 		"installer-name": "memberprofiles",
 		"branch-alias": {
