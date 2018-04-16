@@ -42,5 +42,7 @@
 		"silverstripe/memberprofiles": "self.version",
 		"ajshort/silverstripe-memberprofiles": "self.version",
 		"silverstripe-australia/memberprofiles": "self.version"
-	}
+	},
+    "minimum-stability": "dev",
+    "prefer-stable": "true"
 }
