@@ -1,8 +1,7 @@
-<% require css(memberprofiles/client/css/MemberProfileViewer.css) %>
-
+<% require css(symbiote/silverstripe-memberprofiles: client/css/MemberProfileViewer.css) %>
 <div class="content-container typography>">
 	<h1>$Title</h1>
-	
+
 	<div class="content member-profile <% if IsSelf %>member-profile-self<% end_if %>">
 		<% if IsSelf %>
 			<p class="message"><%t MemberProfiles.THISISYOURPROFILE 'This is your profile!' %> <a href="$Parent.Link"><%t MemberProfiles.EDITPROFILE 'Edit Profile' %></a></p>
