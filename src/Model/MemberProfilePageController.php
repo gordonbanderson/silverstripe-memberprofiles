@@ -166,7 +166,7 @@ class MemberProfilePageController extends PageController {
 	public function register($data, Form $form) {
 		if($member = $this->addMember($form)) {
 			if(!$this->RequireApproval && $this->EmailType != 'Validation' && !$this->AllowAdding) {
-				$member->logIn();
+                Security::setCurrentUser($member);
 			}
 
 			if ($this->RegistrationRedirect) {
@@ -422,7 +422,7 @@ class MemberProfilePageController extends PageController {
 		$member->ProfilePageID   = $this->ID;
 		$member->NeedsValidation = ($this->EmailType == 'Validation');
 		$member->NeedsApproval   = $this->RequireApproval;
-
+		
 		try {
 			$member->write();
 		} catch(ValidationException $e) {
