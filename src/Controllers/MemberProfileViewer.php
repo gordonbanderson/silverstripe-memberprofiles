@@ -48,7 +48,17 @@ class MemberProfileViewer extends PageController {
 	 */
 	public function handleList($request) {
 		$fields  = $this->parent->Fields()->filter('MemberListVisible', true);
+		$groups = $this->parent->Groups();
+		echo 'Groups count: ' . $groups->first()->Title;
+        #groups is correct
+
 		$members = $this->parent->Groups()->relation('Members');
+
+		echo 'MEMBER COUNT: ' . $members->count();
+		foreach($members as $member) {
+		    echo 'Member: ' . $member->ID;
+        }
+
 		$members = new PaginatedList($members, $request);
 
 		$list = new PaginatedList(new ArrayList(), $request);
@@ -131,7 +141,7 @@ class MemberProfileViewer extends PageController {
 		$controller = $this->customise(array(
 			'Member'   => $member,
 			'Sections' => $sectionsList,
-			'IsSelf'   => $member->ID == Member::currentUserID()
+			'IsSelf'   => $member->ID == Security::getCurrentUser()->ID
 		));
 		return $controller->renderWith(array(
 			'MemberProfileViewer_view', MemberProfileViewer::class, 'Page'
