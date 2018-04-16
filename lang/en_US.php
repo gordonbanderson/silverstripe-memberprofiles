@@ -79,5 +79,3 @@ $lang['en_US']['TableListField_PageControls.ss']['VIEWFIRST'] = 'View first';
 $lang['en_US']['TableListField_PageControls.ss']['VIEWLAST'] = 'View last';
 $lang['en_US']['TableListField_PageControls.ss']['VIEWNEXT'] = 'View next';
 $lang['en_US']['TableListField_PageControls.ss']['VIEWPREVIOUS'] = 'View previous';
-
-?>
