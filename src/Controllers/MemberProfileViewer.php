@@ -3,6 +3,7 @@
 namespace Symbiote\MemberProfiles\Controllers;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use Symbiote\MemberProfiles\Controllers\MemberProfileViewer;
 use SilverStripe\Security\Member;
@@ -15,151 +16,163 @@ use PageController;
  * @package    silverstripe-memberprofiles
  * @subpackage controllers
  */
-class MemberProfileViewer extends PageController {
+class MemberProfileViewer extends PageController
+{
 
-	private static $url_handlers = [
-		''           => 'handleList',
-		'$MemberID!' => 'handleView'
-	];
+    private static $url_handlers = [
+        '' => 'handleList',
+        '$MemberID!' => 'handleView'
+    ];
 
-	private static $allowed_actions = [
-		'handleList',
-		'handleView'
-	];
+    private static $allowed_actions = [
+        'handleList',
+        'handleView'
+    ];
 
-	protected $parent, $name;
+    protected $parent, $name;
 
-	/**
-	 * @param RequestHandler $parent
-	 * @param string $name
-	 */
-	public function __construct($parent, $name) {
-		$this->parent = $parent;
-		$this->name   = $name;
+    /**
+     * @param RequestHandler $parent
+     * @param string $name
+     */
+    public function __construct($parent, $name)
+    {
+        $this->parent = $parent;
+        $this->name = $name;
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	/**
-	 * Displays a list of all members on the site that belong to the selected
-	 * groups.
-	 *
-	 * @return string
-	 */
-	public function handleList($request) {
-		$fields  = $this->parent->Fields()->filter('MemberListVisible', true);
-		$groups = $this->parent->Groups();
+    /**
+     * Displays a list of all members on the site that belong to the selected
+     * groups.
+     *
+     * @return string
+     */
+    public function handleList($request)
+    {
+        $fields = $this->parent->Fields()->filter('MemberListVisible', true);
+        $groups = $this->parent->Groups();
 
         // @todo HACK!  The relation method returns no members whatsoever...
         // $members = $this->parent->Groups()->-relation('Members');
         $members = $this->parent->Groups()->first()->Members();
 
 
-		$members = new PaginatedList($members, $request);
+        $members = new PaginatedList($members, $request);
 
-		$list = new PaginatedList(new ArrayList(), $request);
-		$list->setLimitItems(false);
-		$list->setTotalItems($members->getTotalItems());
+        $list = new PaginatedList(new ArrayList(), $request);
+        $list->setLimitItems(false);
+        $list->setTotalItems($members->getTotalItems());
 
-		foreach($members as $member) {
-			$cols   = new ArrayList();
-			$public = $member->getPublicFields();
-			$link   = $this->Link($member->ID);
+        foreach ($members as $member) {
+            $cols = new ArrayList();
+            $public = $member->getPublicFields();
+            $link = $this->Link($member->ID);
 
-			foreach($fields as $field) {
-				if(
-					   $field->PublicVisibility == 'MemberChoice'
-					&& !in_array($field->MemberField, $public)
-				) {
-					$value =  null;
-				} else {
-					$value = $member->{$field->MemberField};
-				}
+            foreach ($fields as $field) {
+                if (
+                    $field->PublicVisibility == 'MemberChoice'
+                    && !in_array($field->MemberField, $public)
+                ) {
+                    $value = null;
+                } else {
+                    $value = $member->{$field->MemberField};
+                }
 
-				$cols->push(new ArrayData(array(
-					'Name'     => $field->MemberField,
-					'Title'    => $field->Title,
-					'Value'    => $value,
-					'Sortable' => $member->hasDatabaseField($field->MemberField),
-					'Link'     => $link
-				)));
-			}
+                $cols->push(new ArrayData(array(
+                    'Name' => $field->MemberField,
+                    'Title' => $field->Title,
+                    'Value' => $value,
+                    'Sortable' => $member->hasDatabaseField($field->MemberField),
+                    'Link' => $link,
+                    'ID' => $member->ID
+                )));
+            }
 
-			$list->push($member->customise(array(
-				'Fields' => $cols
-			)));
-		}
+            $list->push($member->customise(array(
+                'Fields' => $cols
+            )));
+        }
 
-		$this->data()->Title  = _t('MemberProfiles.MEMBERLIST', 'Member List');
-		$this->data()->Parent = $this->parent;
+        $this->data()->Title = _t('MemberProfiles.MEMBERLIST', 'Member List');
+        $this->data()->Parent = $this->parent;
 
-		$controller = $this->customise(array(
-			'Members' => $list
-		));
-		return $controller->renderWith(array(
-			'MemberProfileViewer_list', MemberProfileViewer::class, 'Page'
-		));
-	}
+        $controller = $this->customise(array(
+            'Members' => $list
+        ));
+        return $controller->renderWith(array(
+            'MemberProfileViewer_list', MemberProfileViewer::class, 'Page'
+        ));
+    }
 
-	/**
-	 * Handles viewing an individual user's profile.
-	 *
-	 * @return string
-	 */
-	public function handleView($request) {
-		$id = $request->param('MemberID');
+    /**
+     * Handles viewing an individual user's profile.
+     *
+     * @return string
+     */
+    public function handleView($request)
+    {
+        $id = $request->param('MemberID');
 
-		if(!ctype_digit($id)) {
-			$this->httpError(404);
-		}
+        if (!ctype_digit($id)) {
+            $this->httpError(404);
+        }
 
-		$member = Member::get()->byID($id);
-		$groups = $this->parent->Groups();
+        $member = Member::get()->byID($id);
+        $groups = $this->parent->Groups();
 
-		if(!$member->inGroups($groups)) {
-			$this->httpError(403);
-		}
+        if (!$member->inGroups($groups)) {
+            $this->httpError(403);
+        }
 
-		$sections     = $this->parent->Sections();
-		$sectionsList = new ArrayList();
+        $sections = $this->parent->Sections();
+        $sectionsList = new ArrayList();
 
-		foreach($sections as $section) {
-			$sectionsList->push($section);
-			$section->setMember($member);
-		}
+        foreach ($sections as $section) {
+            $sectionsList->push($section);
+            $section->setMember($member);
+        }
 
-		$this->data()->Title = sprintf(
-			_t('MemberProfiles.MEMBERPROFILETITLE', "%s's Profile"),
-			$member->getName()
-		);
-		$this->data()->Parent = $this->parent;
+        $this->data()->Title = sprintf(
+            _t('MemberProfiles.MEMBERPROFILETITLE', "%s's Profile"),
+            $member->getName()
+        );
+        $this->data()->Parent = $this->parent;
 
-		$controller = $this->customise(array(
-			'Member'   => $member,
-			'Sections' => $sectionsList,
-			'IsSelf'   => $member->ID == Security::getCurrentUser()->ID
-		));
-		return $controller->renderWith(array(
-			'MemberProfileViewer_view', MemberProfileViewer::class, 'Page'
-		));
-	}
+        $controller = $this->customise(array(
+            'Member' => $member,
+            'Sections' => $sectionsList,
+            'IsSelf' => $member->ID == Security::getCurrentUser()->ID
+        ));
+        return $controller->renderWith(array(
+            'MemberProfileViewer_view', MemberProfileViewer::class, 'Page'
+        ));
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getPaginationStart() {
-		if ($start = $this->request->getVar('start')) {
-			if (ctype_digit($start) && (int) $start > 0) return (int) $start;
-		}
+    /**
+     * @return int
+     */
+    public function getPaginationStart()
+    {
+        if ($start = $this->request->getVar('start')) {
+            if (ctype_digit($start) && (int)$start > 0) return (int)$start;
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function Link($action = null) {
-		return Controller::join_links($this->parent->Link(), $this->name, $action);
-	}
+    /**
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        return Controller::join_links($this->parent->Link(), $this->name, $action);
+    }
 
+    public function getLink($action = null)
+    {
+        return $this->Link($action);
+    }
 }
+
