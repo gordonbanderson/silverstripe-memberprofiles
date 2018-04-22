@@ -17,15 +17,15 @@ use PageController;
  */
 class MemberProfileViewer extends PageController {
 
-	private static $url_handlers = array(
+	private static $url_handlers = [
 		''           => 'handleList',
 		'$MemberID!' => 'handleView'
-	);
+	];
 
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'handleList',
 		'handleView'
-	);
+	];
 
 	protected $parent, $name;
 
@@ -49,15 +49,11 @@ class MemberProfileViewer extends PageController {
 	public function handleList($request) {
 		$fields  = $this->parent->Fields()->filter('MemberListVisible', true);
 		$groups = $this->parent->Groups();
-		echo 'Groups count: ' . $groups->first()->Title;
-        #groups is correct
 
-		$members = $this->parent->Groups()->relation('Members');
+        // @todo HACK!  The relation method returns no members whatsoever...
+        // $members = $this->parent->Groups()->-relation('Members');
+        $members = $this->parent->Groups()->first()->Members();
 
-		echo 'MEMBER COUNT: ' . $members->count();
-		foreach($members as $member) {
-		    echo 'Member: ' . $member->ID;
-        }
 
 		$members = new PaginatedList($members, $request);
 
