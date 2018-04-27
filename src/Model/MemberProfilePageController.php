@@ -33,7 +33,8 @@ class MemberProfilePageController extends PageController {
 	private static $allowed_actions = array (
 		'index',
 		'RegisterForm',
-		'afterregistration',
+        'afterregistration',
+        'afterregistration2',
 		'ProfileForm',
 		'add',
 		'AddForm',
@@ -185,7 +186,6 @@ class MemberProfilePageController extends PageController {
 					}
 				}
 			}
-
 			return $this->redirect($this->Link('afterregistration'));
 		} else {
 			return $this->redirectBack();
@@ -198,10 +198,12 @@ class MemberProfilePageController extends PageController {
 	 * @return array
 	 */
 	public function afterregistration() {
-		return array (
-			'Title'   => $this->obj('AfterRegistrationTitle'),
-			'Content' => $this->obj('AfterRegistrationContent')
-		);
+	    $data = [
+            'Title'   => $this->AfterRegistrationTitle,
+            'Content' => $this->AfterRegistration
+			];
+	    $this->extend('updateTemplateFieldsAfterRegistration', $data);
+		return $data;
 	}
 
 	/**
@@ -546,9 +548,6 @@ class MemberProfilePageController extends PageController {
         }
 
         if ($emails) {
-            echo 'sending approval emails';
-
-
             /** @var Email $email */
             $email = new Email();
             $config = SiteConfig::current_site_config();

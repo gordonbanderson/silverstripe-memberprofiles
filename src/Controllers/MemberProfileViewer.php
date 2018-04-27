@@ -5,7 +5,6 @@ use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
-use Symbiote\MemberProfiles\Controllers\MemberProfileViewer;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\Controller;
 use PageController;
@@ -56,7 +55,7 @@ class MemberProfileViewer extends PageController
 
         // @todo HACK!  The relation method returns no members whatsoever...
         // $members = $this->parent->Groups()->-relation('Members');
-        $members = $this->parent->Groups()->first()->Members();
+        $members = $this->parent->Groups()->first()->Members()->sort('ID DESC');
 
 
         $members = new PaginatedList($members, $request);
