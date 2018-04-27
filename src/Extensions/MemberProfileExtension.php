@@ -29,6 +29,7 @@ class MemberProfileExtension extends DataExtension {
 	'ProfilePage' => MemberProfilePage::class
 	);
 
+	// @todo Make this JSON instead
 	public function getPublicFields() {
 		return (array) unserialize($this->owner->getField('PublicFieldsRaw'));
 	}
