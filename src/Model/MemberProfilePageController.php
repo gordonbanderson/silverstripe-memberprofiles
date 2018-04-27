@@ -48,7 +48,8 @@ class MemberProfilePageController extends PageController {
 	 */
 	public function index() {
 		if (isset($_GET['BackURL'])) {
-			Session::set('MemberProfile.REDIRECT', $_GET['BackURL']);
+		    $session = $this->getRequest()->getSession();
+			$session->set('MemberProfile.REDIRECT', $_GET['BackURL']);
 		}
 		$mode = Member::currentUser() ? 'profile' : 'register';
 		$data = Member::currentUser() ? $this->indexProfile() : $this->indexRegister();
@@ -164,6 +165,7 @@ class MemberProfilePageController extends PageController {
 	 * Handles validation and saving new Member objects, as well as sending out validation emails.
 	 */
 	public function register($data, Form $form) {
+	    echo '---- mp register method ----';
 		if($member = $this->addMember($form)) {
 			if(!$this->RequireApproval && $this->EmailType != 'Validation' && !$this->AllowAdding) {
                 Security::setCurrentUser($member);
@@ -315,7 +317,7 @@ class MemberProfilePageController extends PageController {
 	 * @param Form   $form
 	 * @param Member $member
 	 */
-	protected function getSettableGroupIdsFrom(Form $form, Member $member = null) {
+	public function getSettableGroupIdsFrom(Form $form, Member $member = null) {
 		// first off check to see if groups were selected by the user. If so, we want
 		// to remove that control from the form list (just in case someone's sent through an
 		// ID for a group like, say, the admin's group...). It means we have to handle the setting
@@ -413,7 +415,7 @@ class MemberProfilePageController extends PageController {
 	 *
 	 * @return Member|null
 	 */
-	protected function addMember($form) {
+	public function addMember($form) {
 		$member   = new Member();
 		$groupIds = $this->getSettableGroupIdsFrom($form);
 
@@ -422,7 +424,7 @@ class MemberProfilePageController extends PageController {
 		$member->ProfilePageID   = $this->ID;
 		$member->NeedsValidation = ($this->EmailType == 'Validation');
 		$member->NeedsApproval   = $this->RequireApproval;
-		
+
 		try {
 			$member->write();
 		} catch(ValidationException $e) {
@@ -436,33 +438,7 @@ class MemberProfilePageController extends PageController {
 		// If we require admin approval, send an email to the admin and delay
 		// sending an email to the member.
 		if ($this->RequireApproval) {
-			$groups = $this->ApprovalGroups();
-			$emails = array();
-
-			if ($groups) foreach ($groups as $group) {
-				foreach ($group->Members() as $_member) {
-					if ($_member->Email) $emails[] = $_member->Email;
-				}
-			}
-
-			if ($emails) {
-				$email   = new Email();
-				$config  = SiteConfig::current_site_config();
-				$approve = Controller::join_links(
-					Director::baseURL(), 'member-approval', $member->ID, '?token=' . $member->ValidationKey
-				);
-
-				$email->setSubject("Registration Approval Requested for $config->Title");
-				$email->setBcc(implode(',', array_unique($emails)));
-				$email->setTemplate('MemberRequiresApprovalEmail');
-				$email->populateTemplate(array(
-					'SiteConfig'  => $config,
-					'Member'      => $member,
-					'ApproveLink' => Director::absoluteURL($approve)
-				));
-
-				$email->send();
-			}
+            $this->sendApprovalEmail($member);
 		} elseif($this->EmailType != 'None') {
 			$email = MemberConfirmationEmail::create($this, $member);
 			$email->send();
@@ -554,4 +530,44 @@ class MemberProfilePageController extends PageController {
 		$this->extend('updateProfileFields', $fields);
 		return $fields;
 	}
+
+    /**
+     * @param $member
+     */
+    public function sendApprovalEmail($member)
+    {
+        $groups = $this->ApprovalGroups();
+        $emails = array();
+
+        if ($groups) foreach ($groups as $group) {
+            foreach ($group->Members() as $_member) {
+                if ($_member->Email) $emails[] = $_member->Email;
+            }
+        }
+
+        if ($emails) {
+            echo 'sending approval emails';
+
+
+            /** @var Email $email */
+            $email = new Email();
+            $config = SiteConfig::current_site_config();
+            $approve = Controller::join_links(
+                Director::baseURL(), 'member-approval', $member->ID, '?token=' . $member->ValidationKey
+            );
+
+            $email->setSubject("Registration Approval Requested for $config->Title");
+            $email->setBcc(implode(',', array_unique($emails)));
+            $email->setHTMLTemplate('Email/MemberRequiresApprovalEmail');
+            $templateFields = [
+                'SiteConfig' => $config,
+                'Member' => $member,
+                'ApproveLink' => Director::absoluteURL($approve)
+            ];
+            $this->extend('updateTemplateFields', $templateFields);
+            $email->setData($templateFields);
+
+            $email->send();
+        }
+    }
 }
