@@ -1,5 +1,22 @@
 SilverStripe Member Profile Pages Module
 ========================================
+[![Build Status](https://travis-ci.org/gordonbanderson/silverstripe-memberprofiles.svg?branch=upgradess41)](https://travis-ci.org/gordonbanderson/silverstripe-memberprofiles)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/badges/quality-score.png?b=upgradess41)](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/?branch=upgradess41)
+[![Code Coverage](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/badges/coverage.png?b=upgradess41)](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/?branch=upgradess41)
+[![Build Status](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/badges/build.png?b=upgradess41)](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/build-status/upgradess41)
+[![codecov.io](https://codecov.io/github/gordonbanderson/silverstripe-memberprofiles/coverage.svg?branch=upgradess41)](https://codecov.io/github/gordonbanderson/silverstripe-memberprofiles?branch=upgradess41)
+
+[![Latest Stable Version](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/version)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
+[![Latest Unstable Version](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/v/unstable)](//packagist.org/packages/symbiote/silverstripe-memberprofiles)
+[![Total Downloads](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/downloads)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
+[![License](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/license)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
+[![Monthly Downloads](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/d/monthly)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
+[![Daily Downloads](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/d/daily)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
+
+[![Dependency Status](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles/badge.svg)](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles)
+[![Reference Status](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles/reference_badge.svg?style=flat)](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles/references)
+
+![codecov.io](https://codecov.io/github/gordonbanderson/silverstripe-memberprofiles/branch.svg?branch=upgradess41)
 
 Maintainer Contacts
 -------------------
@@ -26,23 +43,6 @@ you to create a page that allows users to register and/or manage their profile.
 Registration can be enabled or disabled in the "Behaviour" tab.
 
 ### Content
-[![Build Status](https://travis-ci.org/gordonbanderson/silverstripe-memberprofiles.svg?branch=upgradess41)](https://travis-ci.org/gordonbanderson/silverstripe-memberprofiles)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/badges/quality-score.png?b=upgradess41)](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/?branch=upgradess41)
-[![Code Coverage](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/badges/coverage.png?b=upgradess41)](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/?branch=upgradess41)
-[![Build Status](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/badges/build.png?b=upgradess41)](https://scrutinizer-ci.com/g/gordonbanderson/silverstripe-memberprofiles/build-status/upgradess41)
-[![codecov.io](https://codecov.io/github/gordonbanderson/silverstripe-memberprofiles/coverage.svg?branch=upgradess41)](https://codecov.io/github/gordonbanderson/silverstripe-memberprofiles?branch=upgradess41)
-
-[![Latest Stable Version](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/version)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
-[![Latest Unstable Version](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/v/unstable)](//packagist.org/packages/symbiote/silverstripe-memberprofiles)
-[![Total Downloads](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/downloads)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
-[![License](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/license)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
-[![Monthly Downloads](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/d/monthly)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
-[![Daily Downloads](https://poser.pugx.org/symbiote/silverstripe-memberprofiles/d/daily)](https://packagist.org/packages/symbiote/silverstripe-memberprofiles)
-
-[![Dependency Status](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles/badge.svg)](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles)
-[![Reference Status](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles/reference_badge.svg?style=flat)](https://www.versioneye.com/php/symbiote:silverstripe-memberprofiles/references)
-
-![codecov.io](https://codecov.io/github/gordonbanderson/silverstripe-memberprofiles/branch.svg?branch=upgradess41)
 The "Profile", "Registration" and "After Registration" allow you to set an
 individual title and content to display for each of these contexts.
 
