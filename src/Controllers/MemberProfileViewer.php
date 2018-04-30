@@ -1,6 +1,7 @@
 <?php
 
 namespace Symbiote\MemberProfiles\Controllers;
+
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Security;
@@ -70,8 +71,7 @@ class MemberProfileViewer extends PageController
             $link = $this->Link($member->ID);
 
             foreach ($fields as $field) {
-                if (
-                    $field->PublicVisibility == 'MemberChoice'
+                if ($field->PublicVisibility == 'MemberChoice'
                     && !in_array($field->MemberField, $public)
                 ) {
                     $value = null;
@@ -155,7 +155,9 @@ class MemberProfileViewer extends PageController
     public function getPaginationStart()
     {
         if ($start = $this->request->getVar('start')) {
-            if (ctype_digit($start) && (int)$start > 0) return (int)$start;
+            if (ctype_digit($start) && (int)$start > 0) {
+                return (int)$start;
+            }
         }
 
         return 0;
@@ -174,4 +176,3 @@ class MemberProfileViewer extends PageController
         return $this->Link($action);
     }
 }
-
