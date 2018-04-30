@@ -1,6 +1,7 @@
 <?php
 
 namespace Symbiote\MemberProfiles\Extensions;
+use SilverStripe\ORM\ValidationResult;
 use Symbiote\MemberProfiles\Model\MemberProfilePage;
 use Symbiote\MemberProfiles\Email\MemberConfirmationEmail;
 use SilverStripe\Forms\CheckboxSetField;
@@ -38,13 +39,16 @@ class MemberProfileExtension extends DataExtension {
 		$this->owner->setField('PublicFieldsRaw', serialize($fields));
 	}
 
+    /**
+     * @param $result ValidationResult
+     */
 	public function canLogIn($result) {
-		if($this->owner->NeedsApproval) $result->error(_t (
+		if($this->owner->NeedsApproval) $result->addError(_t (
 			'MemberProfiles.NEEDSAPPROVALTOLOGIN',
 			'An administrator must confirm your account before you can log in.'
 		));
 
-		if($this->owner->NeedsValidation) $result->error(_t (
+		if($this->owner->NeedsValidation) $result->addError(_t (
 			'MemberProfiles.NEEDSVALIDATIONTOLOGIN',
 			'You must validate your account before you can log in.'
 		));
