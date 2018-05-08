@@ -7,6 +7,7 @@ namespace Symbiote\MemberProfiles\Model;
 
 use SilverStripe\Control\Session;
 use SilverStripe\Security\Member;
+use SilverStripe\View\Requirements;
 use Symbiote\MemberProfiles\Model\MemberProfilePage;
 use SilverStripe\Security\Security;
 use SilverStripe\Core\Injector\Injector;
@@ -537,7 +538,7 @@ class MemberProfilePageController extends PageController
             if ($profileField->Note) {
                 $field->setDescription($profileField->Note);
             }
-            
+
 
             if ($context == 'Registration' && $profileField->DefaultValue) {
                 $field->setValue($profileField->DefaultValue);
