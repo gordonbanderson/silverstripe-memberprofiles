@@ -163,8 +163,23 @@ class MemberConfirmationEmail extends Email
             $this->from    = $page->EmailFrom ? $page->EmailFrom : Email::getAdminEmail();
             $this->to      = $member->Email;
             $this->subject = $this->getParsedString($page->EmailSubject);
-            $this->body    = $this->getParsedString($page->EmailTemplate);
+
+            // @todo GBA This themes the email, but needs done in a more generic way
+            $this->setHTMLTemplate('Email/EmptyThemedEmail');
+            $coreContent = $this->getParsedString($page->EmailTemplate);
+            $this->setData(['Content' => $coreContent]);
         }
+
+        /*
+         * $email->setHTMLTemplate('Email/MemberRequiresApprovalEmail');
+            $templateFields = [
+                'SiteConfig' => $config,
+                'Member' => $member,
+                'ApproveLink' => Director::absoluteURL($approve)
+            ];
+            $this->extend('updateTemplateFields', $templateFields);
+            $email->setData($templateFields);
+         */
     }
 
     /**
