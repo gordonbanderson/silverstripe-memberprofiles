@@ -6,6 +6,7 @@
 namespace Symbiote\MemberProfiles\Model;
 
 use SilverStripe\Control\Session;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\View\Requirements;
 use Symbiote\MemberProfiles\Model\MemberProfilePage;
@@ -177,7 +178,6 @@ class MemberProfilePageController extends PageController
      */
     public function register($data, Form $form)
     {
-        echo '---- mp register method ----';
         if ($member = $this->addMember($form)) {
             if (!$this->RequireApproval && $this->EmailType != 'Validation' && !$this->AllowAdding) {
                 Security::setCurrentUser($member);
@@ -422,9 +422,12 @@ class MemberProfilePageController extends PageController
         $member->ValidationKey   = null;
         $member->write();
 
+        // GBA was $member->logIn(), which is deprecated and only works for one request
         $this->extend('onConfirm', $member);
 
-        $member->logIn();
+        //Security::setCurrentUser($member);
+
+        Injector::inst()->get(IdentityStore::class)->logIn($member);
 
         return array (
             'Title'   => $this->obj('ConfirmationTitle'),

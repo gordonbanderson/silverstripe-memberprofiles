@@ -60,8 +60,10 @@ class MemberProfileViewer extends PageController
 
 
         $members = new PaginatedList($members, $request);
+        $members->setPageLength(20); // @todo, extension or config
 
         $list = new PaginatedList(new ArrayList(), $request);
+
         $list->setLimitItems(false);
         $list->setTotalItems($members->getTotalItems());
 
