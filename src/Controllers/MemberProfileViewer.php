@@ -141,10 +141,12 @@ class MemberProfileViewer extends PageController
         );
         $this->data()->Parent = $this->parent;
 
+        $currentUser = Security::getCurrentUser();
+
         $controller = $this->customise(array(
             'Member' => $member,
             'Sections' => $sectionsList,
-            'IsSelf' => $member->ID == Security::getCurrentUser()->ID
+            'IsSelf' => $member->ID == (!empty($currentUser)) ? $currentUser->ID : null
         ));
         return $controller->renderWith(array(
             'MemberProfileViewer_view', MemberProfileViewer::class, 'Page'
